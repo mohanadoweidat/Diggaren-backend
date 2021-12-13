@@ -1,7 +1,7 @@
 import org.apache.log4j.BasicConfigurator;
 
-public class startAPI
-{
+public class startAPI {
+
 	public static void main(String[] args)
 	{
          //Vi startar API här.
