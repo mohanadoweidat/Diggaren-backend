@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class sRController {
     public String getSongPlaying(sRMessage msg) {
         try {
-            //getting the recommendation from spotify API by sending GET request
+            //Hämta information om låten som spelas just nu i SR genom att göra GET anrop till SR öppen API.
             HttpHeaders headers = new HttpHeaders();
             HttpEntity<String> reqEntity = new HttpEntity<String>("", headers);
             ResponseEntity<String> resEntity = new RestTemplate().exchange("http://api.sr.se/api/v2/playlists/" +
@@ -22,13 +22,12 @@ public class sRController {
                     HttpMethod.GET, reqEntity, String.class);
             System.out.println("request skickades");
             System.out.println(resEntity.getStatusCode());
-            //Json parser to parse the API response in JSON
-            JsonParser parser = new JsonParser();
-            JsonObject playlistObject = parser.parse(resEntity.getBody()).getAsJsonObject().get("playlist").getAsJsonObject();
+            //Json parser för att parsa API svaret i json.
+            JsonObject playlistObject = JsonParser.parseString(resEntity.getBody()).getAsJsonObject().get("playlist").getAsJsonObject();
 
             String currentSongName = null, currentSongArtist = null;
 
-            //protect from eventual null values if no song is currently playing on radio channel
+            //Kontrollera ifall det finns null värden, alltså om ingen låt spelas på radion i respektive valda kanalen.
             try {
                 JsonObject currentSongObject = playlistObject.get("song").getAsJsonObject();
                 currentSongName = currentSongObject.get("title").getAsString();
@@ -37,7 +36,8 @@ public class sRController {
                 return new Gson().toJson(new errorHandler(400, "channelID is a not a valid ID OR there is no song currently playing"));
             }
 
-            //If there is no next song catch it and set time of next song to -1
+
+            //Om det inte finns en låt som spelas efter alltså 'nextsong' så sätt tiden för det till -1.
             JsonObject nextSongObject = null;
             String nextSongStartTime;
             playingSong song = null;

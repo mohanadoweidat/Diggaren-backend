@@ -51,10 +51,6 @@ public class recommendationController {
         JsonObject artistInfo = trackInfo.getAsJsonArray("artists").get(0).getAsJsonObject();
         String artistName = artistInfo.get("name").getAsString();
         String artistID = artistInfo.get("id").getAsString();
-
-        //TO be deleted- debug.
-        System.out.println(artistName + " - " + trackName);
-
         return gson.toJson( new recommendation(trackName, trackID, artistName, artistID));
 
     }

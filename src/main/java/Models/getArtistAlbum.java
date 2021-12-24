@@ -1,5 +1,8 @@
 package Models;
 
+/**
+ * En klass som används för att omvandla objekt från Json till java.
+ */
 public class getArtistAlbum
 {
     private String auth;
