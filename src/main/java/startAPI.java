@@ -42,7 +42,9 @@ public class startAPI {
 		//Skapa controller för spotify
         spotifySearchController searchController = new spotifySearchController();
         spotifyFetchPlaylistsController fetchPlaylistsController = new spotifyFetchPlaylistsController();
-        recommendationController recommendationController = new recommendationController();
+        spotifyRecommendationController spotifyRecommendationController = new spotifyRecommendationController();
+        spotifyAddToPlaylistController addToPlaylistController = new spotifyAddToPlaylistController();
+        spotifyGetArtistAlbumController getArtistAlbumController = new spotifyGetArtistAlbumController();
 
         //Skapa controller för SR
 		sRController sRController = new sRController();
@@ -67,7 +69,7 @@ public class startAPI {
 
 
 			//Ändpunkt för att hämta användarens spellistor.
-			path("/playlist", () -> {
+			path("/playlists", () -> {
 				post("/fetch", (request,response) -> {
 					response.type("application/json"); //definiera svar som json
 					String responseBody = fetchPlaylistsController.fetchPlaylists(request.body());
@@ -82,13 +84,34 @@ public class startAPI {
 				});
 
 
-				//Lägg till en låt i spellistan.
-
-
+				//Lägg till en låt i en spellista.
+				post("/add", (request,response) -> {
+					response.type("application/json"); //Definiera svar som json
+					String responseBody = addToPlaylistController.addToPlayList(request.body());
+					if(responseBody.contains("statusCode")){
+						errorHandler errorObject = new Gson().fromJson(responseBody, errorHandler.class);
+						response.status(errorObject.getStatusCode());
+						response.body(errorObject.getErrorMessage());
+					} else {
+						response.status(200);
+					}
+					return response;
+				});
 			});
 
 			//Hämta artistens album.
-
+			post("/artistAlbums", (request, response) -> {
+				response.type("application/json"); //Definiera svar som json
+				String responseBody = getArtistAlbumController.getArtistAlbums(request.body());
+				if(responseBody.contains("statusCode")){
+					errorHandler errorObject = new Gson().fromJson(responseBody, errorHandler.class);
+					response.status(errorObject.getStatusCode());
+					response.body(errorObject.getErrorMessage());
+				} else {
+					response.status(200);
+				}
+				return responseBody;
+			});
 
 
 
@@ -100,7 +123,7 @@ public class startAPI {
 				// som ett definierat objekt
 				System.out.println("auth: " + msg.getAuth());
 				System.out.println("trackID " + msg.getTrackID());
-				String responseBody = recommendationController.getRecommendation(msg);
+				String responseBody = spotifyRecommendationController.getRecommendation(msg);
 				if(responseBody.contains("statusCode")){
 					errorHandler errorObject = new Gson().fromJson(responseBody, errorHandler.class);
 					response.status(errorObject.getStatusCode());
@@ -155,10 +178,5 @@ public class startAPI {
 			}
 			return "OK";
 		});
-
-
-
-
-
 	}
 }
