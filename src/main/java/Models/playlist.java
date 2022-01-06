@@ -5,17 +5,10 @@ package Models;
  */
 public class playlist
 {
-	private String playlist_id;
+	public playlist(){
+
+	}
+
 	private String auth;
-	private String track_id;
-
-	public String getPlaylist_id() {
-		return playlist_id;
-	}
-
 	public String getAuth() { return auth; }
-
-	public String getTrack_id() {
-		return track_id;
-	}
 }

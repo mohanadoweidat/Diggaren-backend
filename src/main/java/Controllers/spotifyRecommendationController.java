@@ -17,8 +17,9 @@ import org.springframework.web.client.RestTemplate;
  * Controller klass för "Spotify/recommendation" ändpunkt. Det hämtar och behandlar data från spotify API samt lägger
  * in svaret i ett recommendation objekt som sedan skickas till klienten som efterfrågade.
  */
-public class recommendationController {
-    public recommendationController(){
+public class spotifyRecommendationController
+{
+    public spotifyRecommendationController(){
 
     }
 
@@ -28,10 +29,12 @@ public class recommendationController {
         //Hämtar recommendation från spotify API genom att skicka GET förfråga.
         try
         {
+            //Lägga till headers.
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", "Bearer " + msg.getAuth());
             headers.add("Content-Type", "application/json");
             HttpEntity<String> reqEntity = new HttpEntity<String>("", headers);
+            //Skicka en förfråga till spotify API.
             resEntity = new RestTemplate().exchange("https://api.spotify.com/v1/recommendations?" +
                             "limit=1&market=SE&seed_tracks=" + msg.getTrackID() +
                             "&min_energy=0.4&min_popularity=50",
@@ -51,6 +54,7 @@ public class recommendationController {
         JsonObject artistInfo = trackInfo.getAsJsonArray("artists").get(0).getAsJsonObject();
         String artistName = artistInfo.get("name").getAsString();
         String artistID = artistInfo.get("id").getAsString();
+        //Response body.
         return gson.toJson( new recommendation(trackName, trackID, artistName, artistID));
 
     }

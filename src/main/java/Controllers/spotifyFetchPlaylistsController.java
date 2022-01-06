@@ -27,7 +27,7 @@ public class spotifyFetchPlaylistsController
 	    HttpEntity<String > reqEntity = new HttpEntity<>("",httpHeaders);
 	    ResponseEntity<String> resEntity = new RestTemplate().exchange("https://api.spotify.com/v1/me/playlists", HttpMethod.GET, reqEntity, String.class);
 
-	    //Request body.
+	    //Response body.
 	    return  resEntity.getBody();
     }
     catch (RestClientException restClientException){
